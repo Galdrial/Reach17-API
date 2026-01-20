@@ -26,12 +26,9 @@
   "homepage": "https://github.com/Galdrial/Reach17-API#readme",
   "jest": {
     "testEnvironment": "node",
-    "coveragePathIgnorePatterns": [
-      "/node_modules/"
-    ],
-    "testMatch": [
-      "**/tests/**/*.test.js"
-    ]
+    "coveragePathIgnorePatterns": ["/node_modules/"],
+    "testMatch": ["**/tests/**/*.test.js"],
+    "setupFilesAfterEnv": ["<rootDir>/tests/setup.js"]
   },
   "dependencies": {
     "cors": "^2.8.5",
