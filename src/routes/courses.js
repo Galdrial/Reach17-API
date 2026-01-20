@@ -1,6 +1,11 @@
 const express = require('express');
 const router = express.Router();
 const courseController = require('../controllers/courseController');
+const {
+  validateCourse,
+  validateId,
+  validateCourseUniversityParams
+} = require('../middleware/validation');
 // ============================================
 // CRUD ROUTES
 // ============================================
@@ -8,7 +13,7 @@ const courseController = require('../controllers/courseController');
  * @route   POST /api/courses
  * @desc    Create a new course
  */
-router.post('/', courseController.createCourse);
+router.post('/', validateCourse, courseController.createCourse);
 /**
  * @route   GET /api/courses
  * @desc    Get all courses (with optional filters)
@@ -18,17 +23,17 @@ router.get('/', courseController.getCourses);
  * @route   GET /api/courses/:id
  * @desc    Get single course by ID
  */
-router.get('/:id', courseController.getCourseById);
+router.get('/:id', validateId, courseController.getCourseById);
 /**
  * @route   PUT /api/courses/:id
  * @desc    Update course
  */
-router.put('/:id', courseController.updateCourse);
+router.put('/:id', validateId, courseController.updateCourse);
 /**
  * @route   DELETE /api/courses/:id
  * @desc    Delete course
  */
-router.delete('/:id', courseController.deleteCourse);
+router.delete('/:id', validateId, courseController.deleteCourse);
 // ============================================
 // ASSOCIATION ROUTES
 // ============================================
@@ -37,6 +42,7 @@ router.delete('/:id', courseController.deleteCourse);
  * @desc    Associate a university with a course
  */
 router.post('/:courseId/universities/:universityId', 
+  validateCourseUniversityParams,
   courseController.addUniversityToCourse
 );
 /**
@@ -44,6 +50,7 @@ router.post('/:courseId/universities/:universityId',
  * @desc    Remove university association from course
  */
 router.delete('/:courseId/universities/:universityId', 
-  courseController.removeUniversityFromCourse
+    validateCourseUniversityParams,
+    courseController.removeUniversityFromCourse
 );
 module.exports = router;
