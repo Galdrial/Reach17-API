@@ -23,10 +23,10 @@ app.get('/api/health', (req, res) => {
     timestamp: new Date().toISOString()
   });
 });
-// Main routes (we'll create these later)
-// app.use('/api/course-types', require('./routes/courseTypes'));
-// app.use('/api/courses', require('./routes/courses'));
-// app.use('/api/universities', require('./routes/universities'));
+// Main routes
+app.use('/api/course-types', require('./routes/courseTypes'));
+app.use('/api/courses', require('./routes/courses'));
+app.use('/api/universities', require('./routes/universities'));
 // ============================================
 // 5. ERROR HANDLING
 // ============================================
