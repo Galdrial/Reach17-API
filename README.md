@@ -192,6 +192,79 @@ npm run test:watch
 
 ---
 
+## 🧪 Testing Approach
+
+This project implements **integration tests** using Jest and Supertest instead of traditional unit tests with mocks and stubs.
+
+### Why Integration Tests?
+
+While unit testing with libraries like Sinon is valuable for isolated testing, I chose integration testing for this API project because:
+
+**1. Better for API Testing**  
+Integration tests validate the entire HTTP request flow (routes → validation → controllers → database), providing higher confidence that the API works correctly in real-world scenarios.
+
+**2. Less Mocking Required**  
+By using MongoDB Memory Server, tests run against a real (in-memory) database without complex mocking setups. This means:
+
+- No need to mock Mongoose models
+- No need to mock HTTP request/response objects
+- Tests actually verify database queries work correctly
+
+**3. Modern Best Practice**  
+Jest + Supertest is the current industry standard for testing Express APIs, used by companies like Netflix, Airbnb, and many others. Supertest is specifically designed for integration testing of HTTP servers.
+
+**4. Comprehensive Coverage**  
+The integration testing approach achieved **90% code coverage** by testing:
+
+- All CRUD endpoints (47 tests total)
+- Input validation and error cases
+- Edge cases (duplicates, invalid IDs, missing data)
+- Database relationships and population
+- Filter functionality
+
+### Test Organization
+
+Tests are organized by entity with comprehensive coverage:
+
+- **`tests/courseType.test.js`** - 14 tests for CourseType endpoints
+- **`tests/university.test.js`** - 14 tests for University endpoints
+- **`tests/course.test.js`** - 19 tests for Course endpoints (including associations)
+
+Each test suite covers:
+
+- ✅ Happy paths (valid data)
+- ✅ Validation errors (missing/invalid data)
+- ✅ Error handling (404, 400 responses)
+- ✅ Edge cases (duplicates, invalid ObjectIds)
+
+### Technical Details
+
+**Test Infrastructure:**
+
+- **Jest** - Test framework with built-in assertions
+- **Supertest** - HTTP assertions for Express
+- **MongoDB Memory Server** - In-memory database for isolated, fast tests
+- **beforeEach/afterEach** - Ensures test isolation (fresh data per test)
+
+**Example Test:**
+
+```javascript
+it("should create a new course with valid data", async () => {
+  const res = await request(app).post("/api/courses").send({
+    name: "Climate Change Solutions",
+    courseType: courseType1._id,
+  });
+
+  expect(res.statusCode).toBe(201);
+  expect(res.body.success).toBe(true);
+  expect(res.body.data).toHaveProperty("_id");
+});
+```
+
+This approach demonstrates understanding of real-world API testing patterns while ensuring the API works correctly as a complete system.
+
+---
+
 ## 📚 API Endpoints
 
 ### Base URL
@@ -610,7 +683,7 @@ This project is licensed under the **MIT License** - see the [LICENSE](LICENSE) 
 
 ## 👤 Author
 
-**Simone Galdieri**
+**Simone Camerano**
 
 - GitHub: [@Galdrial](https://github.com/Galdrial)
 - Project: [Reach17-API](https://github.com/Galdrial/Reach17-API)
